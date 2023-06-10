@@ -1,0 +1,109 @@
+Metadata-Version: 2.1
+Name: scrapfly-sdk
+Version: 0.8.6
+Summary: Scrapfly SDK for Scrapfly
+Home-page: https://github.com/scrapfly/python-sdk
+Author: Scrapfly
+Author-email: tech@scrapfly.io
+License: BSD
+Project-URL: Company, https://scrapfly.io
+Project-URL: Documentation, https://scrapfly.io/docs
+Project-URL: Source, https://github.com/scrapfly/python-sdk
+Keywords: scraping,web scraping,data,extraction,scrapfly,sdk,cloud,scrapy
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Internet
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: decorator (>=4.2.0)
+Requires-Dist: requests (>=2.25.0)
+Requires-Dist: python-dateutil (<3.0.0,>=2.1)
+Requires-Dist: loguru (>=0.5)
+Requires-Dist: urllib3 (>=1.26.0)
+Requires-Dist: backoff (>=1.10.0)
+Provides-Extra: all
+Requires-Dist: soupsieve ; extra == 'all'
+Requires-Dist: brotlipy ; extra == 'all'
+Requires-Dist: cchardet ; extra == 'all'
+Requires-Dist: msgpack ; extra == 'all'
+Requires-Dist: lxml ; extra == 'all'
+Requires-Dist: beautifulsoup4 ; extra == 'all'
+Requires-Dist: scrapy (>=2.4.0) ; extra == 'all'
+Requires-Dist: extruct ; extra == 'all'
+Provides-Extra: concurrency
+Provides-Extra: develop
+Requires-Dist: bumpversion ; extra == 'develop'
+Requires-Dist: isort ; extra == 'develop'
+Requires-Dist: readme-renderer ; extra == 'develop'
+Requires-Dist: twine ; extra == 'develop'
+Requires-Dist: setuptools ; extra == 'develop'
+Requires-Dist: wheel ; extra == 'develop'
+Requires-Dist: pdoc3 ; extra == 'develop'
+Provides-Extra: parser
+Requires-Dist: lxml ; extra == 'parser'
+Requires-Dist: beautifulsoup4 ; extra == 'parser'
+Requires-Dist: soupsieve ; extra == 'parser'
+Requires-Dist: extruct ; extra == 'parser'
+Provides-Extra: scrapy
+Requires-Dist: scrapy (>=2.4.0) ; extra == 'scrapy'
+Provides-Extra: speedups
+Requires-Dist: brotlipy ; extra == 'speedups'
+Requires-Dist: cchardet ; extra == 'speedups'
+Requires-Dist: msgpack ; extra == 'speedups'
+
+# Scrapfly SDK
+
+## Installation
+
+`pip install scrapfly-sdk`
+
+You can also install extra dependencies
+
+* `pip install "scrapfly-sdk[seepdup]"` for performance improvement
+* `pip install "scrapfly-sdk[concurrency]"` for concurrency out of the box (asyncio / thread)
+* `pip install "scrapfly-sdk[scrapy]"` for scrapy integration
+* `pip install "scrapfly-sdk[scrapy]"` Everything!
+
+## Get Your API Key
+
+You can create a free account on [Scrapfly](https://scrapfly.io/register) to get your API Key.
+
+* [Usage](https://scrapfly.io/docs/sdk/python)
+* [Python API](https://scrapfly.github.io/python-scrapfly/scrapfly)
+* [Open API 3 Spec](https://scrapfly.io/docs/openapi#get-/scrape) 
+* [Scrapy Integration](https://scrapfly.io/docs/sdk/scrapy)
+
+## Migration
+
+### Migrate from 0.7.x to 0.8
+
+asyncio-pool dependency has been dropped
+
+`scrapfly.concurrent_scrape` is now an async generator. If the concurrency is `None` or not defined, the max concurrency allowed by
+your current subscription is used.
+
+```python
+    async for result in scrapfly.concurrent_scrape(concurrency=10, scrape_configs=[ScrapConfig(...), ...]):
+        print(result)
+```
+
+brotli args is deprecated and will be removed in the next minor. There is not benefit in most of case
+versus gzip regarding and size and use more CPU.
+
+### What's new
+
+### 0.8.x
+
+* Better error log
+* Async/Improvement for concurrent scrape with asyncio
+* Scrapy media pipeline are now supported out of the box
