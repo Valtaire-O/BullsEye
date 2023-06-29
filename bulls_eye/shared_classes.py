@@ -10,6 +10,7 @@ import PIL
 import colorsys
 import math
 from collections import Counter
+from termcolor import colored
 
 import torch
 import glob
@@ -149,10 +150,13 @@ class TorchImage:
 
 
         # Directory with images
-        self.image_dir = 'bulls_eye/stop_images/warnings'
-        self.image_files =glob.glob(f'{self.image_dir}/*')
 
-        self.image_dir = glob.glob(f'bulls_eye/stop_images/*')
+
+        #self.image_dir = glob.glob(f'bulls_eye/stop_images/*')
+        self.image_dir = ["bulls_eye/stop_images/twitter",
+                          "bulls_eye/stop_images/warnings","bulls_eye/stop_images/facebk"]
+
+
         self.images_by_dir = {}
         self.embeddings = {}
 
@@ -165,13 +169,13 @@ class TorchImage:
             images = glob.glob(f'{f}/*')
             self.images_by_dir[f] = images
 
-
         self.store_embeddings()
-
+        #self.sample_embedding =  self.embeddings['bulls_eye/stop_images/twitter']
 
 
     def embed_image(self,img):
         new_img_t = self.transform(img)
+
         new_batch_t = torch.unsqueeze(new_img_t, 0)
         with torch.no_grad():
             embedding = self.model(new_batch_t)
@@ -185,13 +189,12 @@ class TorchImage:
             for image_file in self.images_by_dir[dr]:
                 count +=1
                 img = Image.open(image_file).convert('RGB')
+
                 embedding = self.embed_image(img)
 
                 self.embeddings[dr][image_file] = embedding
                 if count ==1:
                     self.skim_embeddings[dr] =  embedding
-
-
 
     # Function to check similarity of new image to existing images
     def compare_new_image(self, img,threshold=0.57):
@@ -205,16 +208,18 @@ class TorchImage:
 
         for image_dir, embedding in self.skim_embeddings.items():
             similarity = cosine(new_embedding, embedding)
+            print("broad similarity check")
             if similarity.item() > threshold:
+                print(colored(f'Broad Check Cosine: {similarity.item()} is above threshold','red'))
 
                 # If an image is similar to one of the stop images, test it against the directory
                 dir_comp = self.compare_to_dir(new_embedding,dr=image_dir)
                 if dir_comp:
                     new_img.show()
                     return True
+            #print(similarity.item())
+        #print(colored("passed","green"))
         return False
-
-
 
 
         #return print(f"The image {Path(new_image_file).name} is dissimilar to the corpus.")
@@ -228,48 +233,47 @@ class TorchImage:
 
         average = sum(avg_sim) / len(avg_sim)
 
-        if average >= threshold:
-            print(f"average similarity to {dr.split('/')[-1]} image class: {average}")
+        if average > threshold:
+            #print(colored(f"average similarity to {dr.split('/')[-1]} image class: {average} is above threshold","red"))
             return True
+        #print(f"average similarity to {dr.split('/')[-1]} image class: {average}")
         return False
 
-    def validate(self, testing_img, threshold=0.63):
+    def validate(self, testing_img, threshold=0.6):
         # Load and transform new image
 
-        new_img = Image.open(testing_img).convert('RGB')
+        #new_img = Image.open(testing_img).convert('RGB')
+        new_img = testing_img.convert('RGB')
 
-        new_img_t = self.transform(new_img)
-        new_batch_t = torch.unsqueeze(new_img_t, 0)
-
-        with torch.no_grad():
-            new_embedding = self.model(new_batch_t)
+        new_embedding = self.embed_image(new_img)
 
         # Compare to existing images
         avg_sim = []
         cosine = nn.CosineSimilarity(dim=1)
         dis_sim = False
-        for image_file, embedding in self.embeddings.items():
+        for image_file, embedding in self.sample_embedding.items():
 
-            if image_file.split('/')[-1] != testing_img.split('/')[-1]:
-                similarity = cosine(new_embedding, embedding)
-
-                avg_sim.append(similarity.item())
+            #if image_file.split('/')[-1] != testing_img.split('/')[-1]:
+            similarity = cosine(new_embedding, embedding)
+            avg_sim.append(similarity.item())
 
 
         average = sum(avg_sim) / len(avg_sim)
-        if average < threshold:
-            new_img.show()
-        print(average)
-        return average, dis_sim
+        if average >= threshold:
+            #new_img.show()
+            return True
 
+        return False
 
 '''image_cosine = TorchImage()
+
 #image_cosine.compare_new_image('bulls_eye/test_images/not_even_clos.jpeg')
 file =  glob.glob(f'bulls_eye/test_images/*')
 
 for f in file:
     print(f"Testing : {f}")
-    image_cosine.compare_new_image(f)
+    img= Image.open(f)
+    image_cosine.compare_new_image(img)
     print('')'''
 
 
@@ -320,7 +324,7 @@ class PostProcessor:
 
     def check_blanks(self,img):
         """Ensures that the link is an image and that it is not empty!"""
-        print('Checking for Blanks')
+
         img = img.convert('RGB')
         #get max colors by getting max pixels H*W
         get_colors = img.getcolors(img.size[0] * img.size[1])
@@ -399,7 +403,6 @@ class PostProcessor:
             # All Non images will fail here ( and SVG's)
             img = PIL.Image.open(response_content)
         except:
-
             return False
         return  img
         # check for transparency
@@ -428,6 +431,7 @@ class PostProcessor:
 
         # Paste the existing image onto the new colored background at the center position
         back.paste(image, (x, y), image)
+
         return back
 
 

@@ -85,3 +85,5 @@ Wand==0.6.11
 webencodings==0.5.1
 wrapt==1.15.0
 zope.interface==6.0
+termcolor==2.3.0
+

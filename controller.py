@@ -25,7 +25,7 @@ class ImageFinder:
             'REQUEST_FINGERPRINTER_IMPLEMENTATION': '2.7',
             'SPIDER_MODULES':  ['bulls_eye.bulls_eye.spiders'],
             'SCRAPFLY_API_KEY': 'e5e77e603ae744b0aa408e4f0b59cd61',
-
+            'LOG_LEVEL' : 'INFO',
             'CONCURRENT_REQUESTS': 20
         }
     def start(self, links:list):
@@ -103,7 +103,14 @@ class ImageFinder:
         start = perf_counter()
         process.start()
         stop = perf_counter()
-        #self.show_results()
+        with open('bulls_eye/bulls_eye/spiders/image_data/img_response_phase.json') as f:
+            found_images = json.load(f)
+        for f in found_images["none_found"] + found_images["found"]:
+            if "image_block" and "meta_block" in f.keys():
+                del f["image_block"]
+                del f["meta_block"]
+                del f["possible_images"]
+        return found_images
 
     def temp_img_spider(self):
 
@@ -117,9 +124,7 @@ class ImageFinder:
         stop = perf_counter()
         print("time taken:", stop - start)
 
-        with open('bulls_eye/bulls_eye/spiders/image_data/img_response_phase.json') as f:
-            found_images = json.load(f)["Row"]
-        return found_images
+
 
 
 
@@ -127,7 +132,7 @@ class ImageFinder:
 '''lwith open('bulls_eye/bulls_eye/spiders/site_data/double_check_patched.json') as f:
     data = json.load(f)["Row"]'''
 
-#test = ImageFinder()._start_img_spider()
+#test = ImageFinder().temp_img_spider()
 
 
 
