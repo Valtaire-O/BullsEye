@@ -1,5 +1,3 @@
-from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
 import time
 import json
 from scrapfly.scrapy import  ScrapflyScrapyRequest,ScrapflyCrawlSpider
@@ -9,7 +7,7 @@ from  bulls_eye.img_processing import Preprocessor, PostProcessor,TorchImage
 from bs4 import BeautifulSoup
 import re
 from collections import Counter
-import os
+
 
 
 def update(d, other): d.update(other); return d
@@ -42,7 +40,7 @@ class BullsEye(ScrapflyCrawlSpider):
 
     # initialize image processor classes
     link_validations, post_processor = Preprocessor(), PostProcessor()
-    torch_vision = TorchImage()
+    #torch_vision = TorchImage()
 
     make_query = BaseQuery()
 
@@ -317,7 +315,7 @@ class BullsEye(ScrapflyCrawlSpider):
             BullsEye.throttle_count = 0
         blank = False
         validate = Preprocessor()
-        torch_vision = BullsEye.torch_vision
+        #torch_vision = BullsEye.torch_vision
 
         post_processor = BullsEye.post_processor
         response_content = response_data["response_content"]
@@ -362,7 +360,7 @@ class BullsEye(ScrapflyCrawlSpider):
                         BullsEye.found.extend(asset_list)
                         good_img = True
 
-                    elif BullsEye.used_backup is False:
+                        '''elif BullsEye.used_backup is False:
                         """After we have checked for transparency and blankness,
                                              check for unwanted images"""
                         #only checking for known bad images for assorted not defaults
@@ -374,7 +372,7 @@ class BullsEye(ScrapflyCrawlSpider):
                         else:
                             # passed blank and stop image test
                             BullsEye.found.extend(asset_list)
-                            good_img = True
+                            good_img = True'''
 
                     else:
 
