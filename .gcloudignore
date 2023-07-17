@@ -1,0 +1,15 @@
+.gitignore
+gcloud_commands
+README.md
+pyvenv.cfg
+venv/
+test_stuff/
+share/
+lib/
+include/
+env/
+dummy_package/
+bulls_eye/update_db/
+bulls_eye/bulls_eye/spiders/test_spider.py
+bin/
+dci_data.py

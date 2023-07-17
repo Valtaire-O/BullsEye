@@ -1,6 +1,11 @@
 bulls_eye/bulls_eye/spiders/test_spider.py
 test_stuff/
-
+main.py
 venv/
 env/
 include/
+lib/
+share/
+test_stuff/
+bulls_eye/test_images/
+bulls_eye/update_db.py

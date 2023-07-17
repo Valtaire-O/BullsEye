@@ -1,7 +1,7 @@
 import json
 import re
 from collections import Counter
-from bulls_eye.shared_classes import validations
+from bulls_eye.img_processing import Preprocessor
 from bs4 import BeautifulSoup
 
 
@@ -12,7 +12,7 @@ with open('test_data/html_blocks.json') as f:
 
 def isolate_images(meta_block, image_block, main_url):
     already_seen = Counter()
-    validate = validations()
+    validate = Preprocessor()
     image_count = 0
     image_cap = 10
 
@@ -24,7 +24,7 @@ def isolate_images(meta_block, image_block, main_url):
         link = item.get('property')
         if link and link == 'og:image':
 
-            check_image = validate.image_file_type(validate.confirm_url(item.get('content'), main_url))
+            check_image = validate.image_format(validate.confirm_url(item.get('content'), main_url))
             if check_image:
                 image_count+=1
                 meta_image.append(check_image)
@@ -33,7 +33,7 @@ def isolate_images(meta_block, image_block, main_url):
     for item in image_block.find_all('img'):
         src_link = item.get('src')
         if src_link:
-            check_image = validate.image_file_type(validate.confirm_url(src_link, main_url))
+            check_image = validate.image_format(validate.confirm_url(src_link, main_url))
             if check_image and already_seen[check_image] == 0:
                 logo_match = re.compile(rf'(?i)logo', flags=re.IGNORECASE).findall(check_image)
                 image_count += 1

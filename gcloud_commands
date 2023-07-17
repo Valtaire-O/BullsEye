@@ -1,0 +1,26 @@
+cloud db password : OjsrbakTm0c7
+# Cloud shell MySQL starter command
+
+gcloud config set project sunlit-shelter-377115
+gcloud sql connect eco-store --user=root
+use ecomap;
+select * from start_set;
+
+
+# local DB password
+Cwodp3eateL
+DB MIGRATION
+mysqldump -u root -p --databases ecomap > dumps bully.sql
+
+ mysqldump -u root -p --databases ecomap > d:\db\db.sql
+
+ mysqldump -u root -p -T Users/valentineokundaye/dumps ecomap
+
+gcloud sql import sql eco-store gs://temp-bucket-496k/bully.sql \
+--database=bully_db
+
+
+-- ecomap.start_set definition
+dagster-cloud serverless deploy-python-executable ./ \
+  --location-name BullsEye \
+  --package-name assets

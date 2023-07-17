@@ -1,9 +1,8 @@
 from bulls_eye.img_processing import Preprocessor
 from scrapy.crawler import CrawlerProcess
 import json
-from collections import Counter
 from time import perf_counter
-
+from multiprocessing import Process, Queue
 from bulls_eye.db_connect import BaseQuery
 
 
@@ -47,11 +46,14 @@ class ImageFinder:
         make_query.update_live_staging()
 
 
+
+
+
     def start_test(self):
 
         """Start by ingesting records from DB,
         expects that all records will have hyperlinks"""
-        make_query = BaseQuery(testing=False)
+        make_query = BaseQuery(testing=True)
         validate = Preprocessor()
         data = make_query.select_live_staging()
 
@@ -66,7 +68,7 @@ class ImageFinder:
         make_query.save_to_copy_db(data)
         self._start_bulls_eye()
         make_query.update_live_staging()
-        return 0
+        return "All Done"
 
     def _start_bulls_eye(self):
         """Runs the image scraper/processor"""
@@ -79,14 +81,17 @@ class ImageFinder:
         print(f"finished in {stop - start }seconds")
 
 
+ImageFinder().start_test()
+'''
+gcloud functions deploy the-bully-function \
+  --gen2 \
+  --region=us-central1 \
+  --runtime=python311 \
+  --source=. \
+  --entry-point=ole_ole \
+  --trigger-http \
+  --memory=8G  \
+  --max-instances=1 \
+  --timeout=3600
 
-test = ImageFinder().start_test()
-
-
-# python3 controller.py
-
-
-
-
-
-
+'''

@@ -10,8 +10,6 @@ import PIL
 import colorsys
 import math
 from collections import Counter
-from termcolor import colored
-
 import torch
 import glob
 from torchvision.models import resnet101
@@ -284,14 +282,9 @@ for f in file:
     print(f"Testing : {f}")
     avg = image_cosine.validate(f)
 
-
-
     out.append(avg)
 out.sort()
 print(out)'''
-
-
-
 
 # python3 bulls_eye/shared_classes.py
 class PostProcessor:
@@ -434,11 +427,4 @@ class PostProcessor:
         back.paste(image, (x, y), image)
 
         return back
-
-#git commit -m "removed logging, faster scrape"
-
-
-
-
-
 
