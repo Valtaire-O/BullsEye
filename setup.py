@@ -202,8 +202,14 @@ setup(
                 "google-cloud-storage",
                 "google-crc32c",
                 "google-resumable-media",
-                "googleapis-common-protos"
-
+                "googleapis-common-protos",
+                "dagit==1.3.14",
+                "dagster==1.3.14",
+                "dagster-cloud==1.3.14",
+                "dagster-cloud-cli==1.3.14",
+                "dagster-graphql==1.3.14",
+                "dagster-webserver==1.3.14",
+                "datasets==2.13.1"
 
     ],
     extras_require={"dev": ["dagit", "pytest"]},
