@@ -182,7 +182,7 @@ setup(
                 "Twisted==22.10.0",
                 "typing_extensions==4.6.3",
                 "tzdata==2023.3",
-                "urllib3==2.0.2",
+                "urllib3",
                 "w3lib==2.1.1",
                 "Wand==0.6.11",
                 "watchdog==3.0.0",
