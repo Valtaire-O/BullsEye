@@ -1,4 +1,0 @@
-locations:
-  - location_name: bully_dags
-    code_source:
-      package_name: bully_dags
