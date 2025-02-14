@@ -1,0 +1,14 @@
+fully_visible/
+test_link/
+test_links/
+testing_images.json
+main_site_extract.json
+find_images.json
+find_images_test.json
+git_cloud_commands
+classification_layer.json
+object_detection_layer.json
+test_work/dual_test_set.json
+test_work/best.pt
+misc_commands
+
